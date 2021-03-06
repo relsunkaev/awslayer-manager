@@ -5,8 +5,6 @@ from your Pipfile and installs them into a separate directory which it's deploye
 working with the high performance `mysqlclient` library by compiling it inside a docker container that closely mimics
 the AWS Lambda environment and deploying it with the layer.
 
----
-
 ## Installation
 
 To install this package, run
