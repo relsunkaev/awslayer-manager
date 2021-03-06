@@ -1,0 +1,13 @@
+# Compiled Python bytecode
+*.py[cod]
+*.pyc
+__pycache__/
+
+# Lock files
+Pipfile.lock
+package-lock.json
+Pipfile
+
+# JetBrains IDE
+.idea/
+.vscode/
