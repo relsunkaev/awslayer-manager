@@ -17,7 +17,7 @@ def deploy_layer(runtime):
             if 'mysqlclient' not in line:
                 tmp_file.write(line)
             else:
-                version = line.split('==')[1].split(';')[0]
+                version = line.strip('\n').split('==')[1].split(';')[0]
                 mysqlclient = True
 
     print('Installing requirements...')
