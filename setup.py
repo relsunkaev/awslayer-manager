@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 import pathlib
 
 # The directory containing this file
@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name='awslayer-manager',
-    version='1.0.0',
+    version='1.0.4',
     packages=['awslayer'],
     url='https://www.example.com',
     include_package_data=True,
