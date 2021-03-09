@@ -43,23 +43,24 @@ def main():
         else:
             init_layer(service, runtime)
     elif argv[1] == 'deploy':
-        if os.path.isdir('layer') \
-                and os.path.isdir('layer/package') \
-                and os.path.isfile('layer/serverless.yml') \
-                and os.path.isfile('layer/package/aws_requirements.txt'):
+        if not os.path.isdir('layer') \
+                or not os.path.isdir('layer/package') \
+                or not os.path.isfile('layer/serverless.yml') \
+                or not os.path.isfile('layer/package/aws_requirements.txt'):
+            print("\033[91mLayer not initialized. Please run `awslayer init`.\033[0m")
+            print(usage_str)
+        else:
             deploy_layer(runtime)
-        else:
-            print("\033[91mLayer not initialized. Please run `awslayer init`.\033[0m")
-            print(usage_str)
+
     elif argv[1] == 'update':
-        if os.path.isdir('layer') \
-                and os.path.isdir('layer/package') \
-                and os.path.isfile('layer/serverless.yml') \
-                and os.path.isfile('layer/package/aws_requirements.txt'):
-            update_layer(service, runtime)
-        else:
+        if not os.path.isdir('layer') \
+                or not os.path.isdir('layer/package') \
+                or not os.path.isfile('layer/serverless.yml') \
+                or not os.path.isfile('layer/package/aws_requirements.txt'):
             print("\033[91mLayer not initialized. Please run `awslayer init`.\033[0m")
             print(usage_str)
+        else:
+            update_layer(service, runtime)
     else:
         print(f"\033[91mUnrecognized command: {argv[1]}.\033[0m")
         print(usage_str)

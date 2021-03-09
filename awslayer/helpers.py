@@ -46,9 +46,14 @@ layers:
 def fetch_requirements():
     print('Fetching requirements...')
 
-    with open('layer/package/aws_requirements.txt', 'w') as file:
-        requirements = os.popen('pipenv lock -r').read()
-        file.write(requirements)
+    if os.path.isfile('requirements.txt'):
+        os.system('cp requirements.txt layers/package/aws_requirements.txt')
+    if os.path.isfile('Pipfile'):
+        with open('layer/package/aws_requirements.txt', 'w') as file:
+            requirements = os.popen('pipenv lock -r').read()
+            file.write(requirements)
+    else:
+        raise RuntimeError('Requirements file not found. Please add Pipfile or requirements.txt to your project.')
 
 
 @contextmanager

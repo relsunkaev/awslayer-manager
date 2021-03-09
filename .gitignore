@@ -8,6 +8,11 @@ Pipfile.lock
 package-lock.json
 Pipfile
 
+# Build files
+build/
+dist/
+*.egg*
+
 # JetBrains IDE
 .idea/
 .vscode/
