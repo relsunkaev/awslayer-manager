@@ -8,6 +8,7 @@ the AWS Lambda environment and deploying it with the layer.
 ## Installation
 
 To install this package, run
+
 ```bash
 pip install awslayer-manager
 ```
@@ -18,17 +19,21 @@ pip install awslayer-manager
 - This package requires `Docker` if you're planning to work with `mysqlclient`. If not, you can omit it.
 
 ## Running
+
 To initialize the layer run
+
 ```bash
-awslayer init
+awslayer
 ```
+
 in the project directory. This will extract requirements from your Pipfile and create a serverless.yml inside the layer
-directory. Once the layer is initialized, run the following command:
-```bash
-awslayer deploy
-```
-which will install all the requirements inside the `layers/package` directory and deploy it using `sls deploy`. Once
-that is done, add the following for each function in your project's serverless.yml:
+directory. Once the layer is initialized, it will install all the requirements inside the `layers/package` directory and
+deploy it using `sls deploy` the layer to the specified environment (dev by default).
+
+To change the environment add use the `--env` option. Supports `dev` and `prod` environments.
+
+Once that is done, add the following for each function in your project's serverless.yml:
+
 ```YAML
 functions:
   func-name:
@@ -36,15 +41,12 @@ functions:
     layers:
       - "${cf:stack-name.ServiceNameLayerLambdaLayerQualifiedArn}"
 ```
+
 where you can find the "ServiceNameLayerLambdaLayerQualifiedArn" identifier in the CloudFormation stack.
 
-To update requirements and runtime, run:
-```bash
-awslayer update
-```
-
-**NOTE:** This package will create a `layer` directory inside your project which I recommend adding to your
-.gitignore file as it is fairly heavy (depending on the size of your requirements)
+**NOTE:** This package will create a `layer` directory inside your project which I recommend adding to your .gitignore
+file as it is fairly heavy (depending on the size of your requirements)
 
 ## Contributing
+
 Pull requests are welcome.

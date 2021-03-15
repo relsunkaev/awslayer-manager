@@ -20,20 +20,20 @@ def get_service_name():
                 return line.strip('\n').split()[1]
 
 
-def write_yml(service, runtime):
+def write_yml(service, runtime, env):
     print("Writing serverless.yml..")
 
     pascal_case_name = service.replace('-', ' ').title().replace(' ', '')
     dromedary_case_name = pascal_case_name[0].lower() + pascal_case_name[1:]
 
     yaml_template = f'''\
-service: {service}-layer
+service: {service}-layer-{env}
 provider:
   name: aws
   runtime: {runtime}
   region: us-east-1
 layers:
-  {dromedary_case_name}:
+  {dromedary_case_name}{env.capitalize()}:
     path: package
     compatibleRuntimes:
       - {runtime}

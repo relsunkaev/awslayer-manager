@@ -3,14 +3,15 @@ from .helpers import build_mysqlclient
 import shutil
 
 
-def deploy_layer(runtime):
+def deploy_layer(runtime, env):
     print('Beginning deployment...')
     os.chdir('layer')
 
     req_file = 'package/aws_requirements.txt'
     tmp_req_file = 'package/tmp_requirements.txt'
 
-    print('Processing requiements...')
+    print('Processing requirements...')
+    mysqlclient = False
     with open(req_file, 'r') as file, open(tmp_req_file, 'w') as tmp_file:
         lines = file.readlines()
         for line in lines:
@@ -32,8 +33,8 @@ def deploy_layer(runtime):
     os.remove('package/tmp_requirements.txt')
 
     print('Deploying layer...')
-    error = os.system('sls deploy')
+    error = os.system(f'sls deploy --{env}')
     if error:
         print("\033[91mDeployment failed!\033[0m")
     else:
-        print("\033[92mDone! Now run `awslayer deploy` to deploy layer to AWS Lambda.\033[0m")
+        print(f"\033[92mDeployment to {env} complete!\033[0m")
