@@ -27,7 +27,7 @@ def write_yml(service, runtime, env):
     dromedary_case_name = pascal_case_name[0].lower() + pascal_case_name[1:]
 
     yaml_template = f'''\
-service: {service}-layer-{env}
+service: {service}-layer
 provider:
   name: aws
   runtime: {runtime}
