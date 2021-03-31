@@ -32,6 +32,7 @@ provider:
   name: aws
   runtime: {runtime}
   region: us-east-1
+  stage: {env}
 layers:
   {dromedary_case_name}{env.capitalize()}:
     path: package
