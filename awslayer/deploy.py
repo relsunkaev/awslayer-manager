@@ -33,7 +33,7 @@ def deploy_layer(runtime, env):
     os.remove('package/tmp_requirements.txt')
 
     print('Deploying layer...')
-    error = os.system(f'sls deploy --{env}')
+    error = os.system(f'sls deploy --stage {env}')
     if error:
         print("\033[91mDeployment failed!\033[0m")
     else:
