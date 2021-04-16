@@ -1,11 +1,12 @@
 import os
-from .helpers import build_mysqlclient
 import shutil
+
+from .helpers import build_mysqlclient
 
 
 def deploy_layer(runtime, env):
     print('Beginning deployment...')
-    os.chdir('layer')
+    os.chdir('.layer')
 
     req_file = 'package/aws_requirements.txt'
     tmp_req_file = 'package/tmp_requirements.txt'

@@ -7,7 +7,7 @@ from .helpers import fetch_requirements, write_yml
 def init_layer(service, runtime, env):
     print(f"Initializing {service}...")
 
-    Path('layer/package').mkdir(parents=True, exist_ok=True)
+    Path('.layer/package').mkdir(parents=True, exist_ok=True)
 
     try:
         fetch_requirements()
@@ -17,4 +17,4 @@ def init_layer(service, runtime, env):
 
     write_yml(service, runtime, env)
 
-    print(f"\033[92mDone! Now run `awslayer deploy` to deploy layer to AWS Lambda {env} environment.\033[0m")
+    print(f"\033[92mAWS Layer Initialized!!\033[0m")

@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name='awslayer-manager',
-    version='1.0.10',
+    version='1.0.11',
     packages=['awslayer'],
     url='https://www.example.com',
     include_package_data=True,

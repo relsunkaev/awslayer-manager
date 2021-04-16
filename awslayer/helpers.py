@@ -40,7 +40,7 @@ layers:
       - {runtime}
     description: "Unique dependencies for {service}"'''
 
-    with open('layer/serverless.yml', 'w') as yaml_file:
+    with open('.layer/serverless.yml', 'w') as yaml_file:
         yaml_file.write(yaml_template)
 
 
@@ -48,9 +48,9 @@ def fetch_requirements():
     print('Fetching requirements...')
 
     if os.path.isfile('requirements.txt'):
-        os.system('cp requirements.txt layers/package/aws_requirements.txt')
+        os.system('cp requirements.txt .layer/package/aws_requirements.txt')
     if os.path.isfile('Pipfile'):
-        with open('layer/package/aws_requirements.txt', 'w') as file:
+        with open('.layer/package/aws_requirements.txt', 'w') as file:
             requirements = os.popen('pipenv lock -r').read()
             file.write(requirements)
     else:
@@ -147,7 +147,7 @@ def build_mysqlclient(runtime, version):
     # Compile mysqlclient
     with dockerfile(runtime), inject_build_commands(pkg_dir, lib_dir, version):
         print('Building container...')
-        error = os.system(f'docker build -t {img} .')
+        error = os.system(f'docker build --progress tty -t {img} .')
         if error:
             print("Docker build failed!")
             return ERROR

@@ -1,9 +1,9 @@
 # awslayer-manager
 
-This a simple tool to build and upload your project requirements as an AWS Lambda Layer. It extracts the requirements
-from your Pipfile and installs them into a separate directory which it's deployed from. This package also supports
-working with the high performance `mysqlclient` library by compiling it inside a docker container that closely mimics
-the AWS Lambda environment and deploying it with the layer.
+This is a simple tool that helps you build and upload your project requirements as an AWS Lambda Layer. It extracts
+the requirements from your Pipfile and installs them into a separate directory which it is then deployed from. This
+package also supports working with the high performance `mysqlclient` library by compiling it inside a docker container
+that closely mimics the AWS Lambda environment and deploying it with the layer.
 
 ## Installation
 
@@ -30,22 +30,23 @@ in the project directory. This will extract requirements from your Pipfile and c
 directory. Once the layer is initialized, it will install all the requirements inside the `layers/package` directory and
 deploy it using `sls deploy` the layer to the specified environment (dev by default).
 
-To change the environment add use the `--env` option. Supports `dev` and `prod` environments.
+To change the deployment environment use the `--env` option. Currently supports `dev`, `stage`, and `prod` environments.
 
-Once that is done, add the following for each function in your project's serverless.yml:
+Once that is done, add the following (omit square brackets) for each function in your project's serverless.yml:
 
 ```YAML
 functions:
   func-name:
     handler: src/handler.func-name
     layers:
-      - "${cf:stack-name.ServiceNameLayerLambdaLayerQualifiedArn}"
+      - "${cf:[stack-name].[ServiceName]LayerLambdaLayerQualifiedArn}"
 ```
 
-where you can find the "ServiceNameLayerLambdaLayerQualifiedArn" identifier in the CloudFormation stack.
+where you can find the "[ServiceName]LayerLambdaLayerQualifiedArn" identifier in the CloudFormation stack.
 
-**NOTE:** This package will create a `layer` directory inside your project which I recommend adding to your .gitignore
-file as it is fairly heavy (depending on the size of your requirements)
+**NOTE:** This package will create a `.layer` directory inside your project which I recommend adding to your .gitignore
+file as it is fairly heavy (depending on the size of your requirements). The script, however, will try to clean up
+to the best of its ability.
 
 ## Contributing
 
