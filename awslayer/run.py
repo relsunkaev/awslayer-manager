@@ -3,6 +3,7 @@ import shutil
 import sys
 import time
 from optparse import OptionParser
+import cursor
 
 from .deploy import deploy_layer
 from .helpers import get_service_name, get_runtime
@@ -17,6 +18,8 @@ def main():
                       help="Specify environment, 'dev' by default", metavar='ENV')
 
     (options, args) = parser.parse_args()
+
+    cursor.hide()
 
     env_str = f'{options.env.upper()}'
     if env_str == 'PROD':
@@ -42,6 +45,8 @@ def main():
     shutil.rmtree('.layer')
     print(f"\033[92mDone!\033[0m")
 
+    cursor.show()
+
 
 if __name__ == '__main__':
     dir = os.getcwd()
@@ -49,4 +54,5 @@ if __name__ == '__main__':
         main()
     except:
         shutil.rmtree(f'{dir}/.layer')
+        cursor.show()
         sys.exit(1)

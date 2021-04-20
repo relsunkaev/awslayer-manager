@@ -58,16 +58,35 @@ def fetch_requirements():
 
 
 @contextmanager
-def inject_build_commands(pkg_dir, lib_dir, version):
-    print("Injecting build commands...")
+def inject_build_commands(pkg_dir, lib_dir):
+    print("Injecting build commands...")\
 
-    commands = f'''\
+    req_file = 'package/aws_requirements.txt'
+
+    mysqlclient = False
+    with open(req_file, 'r') as file:
+        requirements = list()
+        lines = file.readlines()
+        for line in lines:
+            if '==' in line:
+                requirements.append(line.rstrip('\n'))
+            if 'mysqlclient' in line:
+                mysqlclient = True
+
+    install = f'''\
 #!/bin/bash
 # this script is used in and by build.sh
+echo "Installing packages..."
 PKG_DIR={pkg_dir}
 LIB_DIR={lib_dir}
 
-pip install --upgrade mysqlclient=={version} -t ${{PKG_DIR}};
+pip install --upgrade -r package/aws_requirements.txt -t ${{PKG_DIR}};
+
+echo "Installation complete!";
+
+'''
+    copy_mysqlclient = f'''\
+echo "Copying mysqlclient binary files..."
 
 for i in `ls /usr/lib64/mysql/libmysqlclient.so*`;
 do
@@ -79,7 +98,14 @@ do
         echo "COPYING '$i' to output dir..."
         cp $i ${{LIB_DIR}}
     fi
-done'''
+done
+
+echo "Binary file transfer complete!"
+'''
+
+    commands = install
+    if mysqlclient:
+        commands += copy_mysqlclient
 
     with open('pip_and_copy.sh', 'w') as file:
         file.write(commands)
@@ -125,8 +151,8 @@ RUN yum install -y ${{mysql_devel_package}}'''
         os.remove('Dockerfile')
 
 
-def build_mysqlclient(runtime, version):
-    print("Detected mysqlclient as a dependency!")
+def build_in_container(runtime):
+    print("Building dependencies inside docker container...")
 
     if not os.path.exists(os.popen('command -v docker').read().strip('\n')):
         print("\033[91mDocker installation required for building mysqlclient.\033[0m")
@@ -145,7 +171,7 @@ def build_mysqlclient(runtime, version):
     img = f'tmp/lambda-{runtime}-mysqlclient'
 
     # Compile mysqlclient
-    with dockerfile(runtime), inject_build_commands(pkg_dir, lib_dir, version):
+    with dockerfile(runtime), inject_build_commands(pkg_dir, lib_dir):
         print('Building container...')
         error = os.system(f'docker build --progress tty -t {img} .')
         if error:
