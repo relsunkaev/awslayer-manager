@@ -16,7 +16,7 @@ pip install awslayer-manager
 ### Requirements
 
 - Requires your project to be using the `Serverless` framework.
-- This package requires `Docker` if you're planning to work with `mysqlclient`. If not, you can omit it.
+- This package requires `Docker` to build requirements to avoid compilation issues.
 
 ## Running
 
