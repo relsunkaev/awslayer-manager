@@ -63,16 +63,6 @@ def inject_build_commands(pkg_dir, lib_dir):
 
     req_file = 'package/aws_requirements.txt'
 
-    mysqlclient = False
-    with open(req_file, 'r') as file:
-        requirements = list()
-        lines = file.readlines()
-        for line in lines:
-            if '==' in line:
-                requirements.append(line.rstrip('\n'))
-            if 'mysqlclient' in line:
-                mysqlclient = True
-
     install = f'''\
 #!/bin/bash
 # this script is used in and by build.sh
@@ -80,10 +70,9 @@ echo "Installing packages..."
 PKG_DIR={pkg_dir}
 LIB_DIR={lib_dir}
 
-pip install --upgrade -r package/aws_requirements.txt -t ${{PKG_DIR}};
+pip install --quiet --upgrade -r package/aws_requirements.txt -t ${{PKG_DIR}};
 
 echo "Installation complete!";
-
 '''
     copy_mysqlclient = f'''\
 echo "Copying mysqlclient binary files..."
@@ -97,6 +86,7 @@ do
         # because libmysqlclient.so.21 is the necessary and sufficient file for mysqlclient to work
         echo "COPYING '$i' to output dir..."
         cp $i ${{LIB_DIR}}
+        break
     fi
 done
 
@@ -104,8 +94,11 @@ echo "Binary file transfer complete!"
 '''
 
     commands = install
-    if mysqlclient:
-        commands += copy_mysqlclient
+    with open(req_file, 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            if 'mysqlclient' in line:
+                commands += copy_mysqlclient
 
     with open('pip_and_copy.sh', 'w') as file:
         file.write(commands)
@@ -155,10 +148,10 @@ def build_in_container(runtime):
     print("Building dependencies inside docker container...")
 
     if not os.path.exists(os.popen('command -v docker').read().strip('\n')):
-        print("\033[91mDocker installation required for building mysqlclient.\033[0m")
+        print("\033[91mDocker installation required for building dependencies.\033[0m")
         return ERROR
     elif not os.popen('docker ps').read():
-        print("\033[91mDocker daemon needs to be running to build mysqlclient. Please start Docker.\033[0m")
+        print("\033[91mDocker daemon needs to be running to build dependencies. Please start Docker.\033[0m")
         return ERROR
 
     pkg_dir = Path(f'package/python/lib/{runtime}/site-packages')
@@ -168,9 +161,9 @@ def build_in_container(runtime):
     lib_dir.mkdir(parents=True, exist_ok=True)
 
     # Set the docker image name
-    img = f'tmp/lambda-{runtime}-mysqlclient'
+    img = f'tmp/lambda-{runtime}'
 
-    # Compile mysqlclient
+    # Compile dependencies
     with dockerfile(runtime), inject_build_commands(pkg_dir, lib_dir):
         print('Building container...')
         error = os.system(f'docker build --progress tty -t {img} .')

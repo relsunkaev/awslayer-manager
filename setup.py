@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name='awslayer-manager',
-    version='1.0.12',
+    version='1.0.13',
     packages=['awslayer'],
     install_requires=[
           'cursor',
