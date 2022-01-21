@@ -117,8 +117,8 @@ def dockerfile(runtime):
     config = f'''\
 FROM lambci/lambda:build-{runtime}
 
-ARG mysql_gpg_key_url="https://repo.mysql.com/RPM-GPG-KEY-mysql"
-ARG mysql_gpg_key_name="RPM-GPG-KEY-mysql"
+ARG mysql_gpg_key_url="https://repo.mysql.com/RPM-GPG-KEY-mysql-2022"
+ARG mysql_gpg_key_name="RPM-GPG-KEY-mysql-2022"
 ARG mysql_repo_rpm="mysql80-community-release-el7-3.noarch.rpm"
 ARG mysql_devel_package_url="https://dev.mysql.com/get/${{mysql_repo_rpm}}"
 ARG mysql_devel_package="mysql-community-devel"
